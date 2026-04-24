@@ -11,14 +11,21 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:            #08090d;
-      --bg-2:          #0f1117;
-      --fg:            #f0ede8;
-      --fg-2:          #8a8782;
-      --accent:        #e85d3a;
-      --accent-light:  #f07a5a;
-      --border:        rgba(240,237,232,0.07);
-      --border-strong: rgba(240,237,232,0.14);
+      --bg:           #ffffff;
+      --bg-2:         #f4f6fb;
+      --bg-3:         #eef1f8;
+      --fg:           #1a1d2e;
+      --fg-2:         #5a6070;
+      --fg-3:         #9299a8;
+      --accent:       #e85d3a;
+      --accent-l:     #f07a5a;
+      --accent-bg:    rgba(232,93,58,0.08);
+      --border:       rgba(0,0,0,0.08);
+      --border-2:     rgba(0,0,0,0.14);
+      --shadow-xs:    0 1px 4px rgba(0,0,0,0.05);
+      --shadow-sm:    0 2px 12px rgba(0,0,0,0.07);
+      --shadow:       0 6px 28px rgba(0,0,0,0.10);
+      --nav-h:        64px;
     }
 
     html { scroll-behavior: smooth; }
@@ -30,225 +37,410 @@
       font-size: 16px;
       line-height: 1.7;
       -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
     /* ── Nav ─────────────────────────────────────────── */
     nav {
-      position: fixed; top: 0; width: 100%; z-index: 100;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: var(--nav-h);
       display: flex; justify-content: space-between; align-items: center;
-      padding: 1.25rem 4rem;
-      background: rgba(8,9,13,0.88);
-      backdrop-filter: blur(14px);
-      border-bottom: 0.5px solid var(--border);
+      padding: 0 4rem;
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-xs);
     }
-    .nav-logo {
-      font-size: 1rem; font-weight: 800; letter-spacing: 0.08em;
-      color: var(--fg); text-decoration: none;
+    .nav-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; font-weight: 600; letter-spacing: 0.04em;
+      color: var(--fg); text-decoration: none; flex-shrink: 0;
     }
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a {
+    .nav-tabs { display: flex; list-style: none; height: 100%; }
+    .nav-tabs li { height: 100%; }
+    .nav-tabs a {
+      display: flex; align-items: center; height: 100%;
+      padding: 0 1rem;
       color: var(--fg-2); text-decoration: none;
-      font-size: 0.78rem; font-weight: 600;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      transition: color 0.2s;
+      font-size: 0.74rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border-bottom: 2.5px solid transparent;
+      position: relative; top: 1px;
+      transition: color 0.2s, border-color 0.2s;
+      cursor: pointer;
     }
-    .nav-links a:hover { color: var(--fg); }
+    .nav-tabs a:hover { color: var(--fg); }
+    .nav-tabs a.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-    /* ── Hero ────────────────────────────────────────── */
-    #hero {
-      min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 7rem 4rem 5.5rem;
-      border-bottom: 0.5px solid var(--border);
-      position: relative; overflow: hidden;
+    /* ── Hamburger ───────────────────────────────────── */
+    .hamburger {
+      display: none; flex-direction: column; justify-content: center;
+      gap: 5px; cursor: pointer; background: none; border: none; padding: 6px;
     }
-    .hero-bg-text {
-      position: absolute; right: -1.5rem; top: 50%;
-      transform: translateY(-50%);
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(10rem, 22vw, 22rem);
-      font-weight: 300;
-      color: rgba(240,237,232,0.022);
-      line-height: 1; pointer-events: none; user-select: none;
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--fg); border-radius: 2px; transition: all 0.3s;
     }
-    .hero-label {
-      font-size: 0.75rem; font-weight: 700;
-      letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 1.5rem;
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed; top: var(--nav-h); left: 0; right: 0;
+      background: var(--bg); z-index: 190;
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow); padding: 0.5rem 0 1rem;
     }
-    .hero-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(4.5rem, 11vw, 10rem);
-      font-weight: 300; line-height: 0.9;
-      letter-spacing: -0.02em; color: var(--fg);
-      margin-bottom: 2rem;
+    .mobile-menu.open { display: block; }
+    .mobile-menu a {
+      display: block; padding: 0.8rem 1.5rem;
+      color: var(--fg-2); text-decoration: none;
+      font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      transition: color 0.2s, background 0.2s; cursor: pointer;
     }
-    .hero-name em { font-style: italic; color: var(--fg-2); }
-    .hero-description {
-      max-width: 540px; font-size: 1rem;
-      color: var(--fg-2); line-height: 1.85;
-      margin-bottom: 2.5rem;
+    .mobile-menu a:hover, .mobile-menu a.active { color: var(--accent); background: var(--accent-bg); }
+
+    /* ── Tab System ──────────────────────────────────── */
+    .page { padding-top: var(--nav-h); flex: 1; }
+    .tab-content { display: none; animation: fadeUp 0.28s ease; }
+    .tab-content.active { display: flex; flex-direction: column; min-height: calc(100vh - var(--nav-h)); }
+    .tab-main { flex: 1; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-    .hero-cta { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+
+    /* ── Buttons ─────────────────────────────────────── */
     .btn-primary {
-      display: inline-block; background: var(--accent); color: #fff;
-      text-decoration: none; padding: 0.8rem 2.2rem;
-      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; transition: background 0.2s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--accent); color: #fff;
+      text-decoration: none; padding: 0.82rem 2.1rem;
+      font-size: 0.76rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; border-radius: 7px;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 3px 14px rgba(232,93,58,0.32);
+      border: none; cursor: pointer;
     }
-    .btn-primary:hover { background: var(--accent-light); }
+    .btn-primary:hover {
+      background: var(--accent-l); transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(232,93,58,0.4);
+    }
     .btn-ghost {
-      display: inline-block; color: var(--fg); text-decoration: none;
-      padding: 0.8rem 2.2rem; font-size: 0.78rem; font-weight: 700;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: var(--fg); text-decoration: none;
+      padding: 0.82rem 2.1rem; font-size: 0.76rem; font-weight: 700;
       letter-spacing: 0.12em; text-transform: uppercase;
-      border: 0.5px solid var(--border-strong); transition: border-color 0.2s;
+      border: 1.5px solid var(--border-2); border-radius: 7px;
+      background: transparent; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
     }
-    .btn-ghost:hover { border-color: var(--fg); }
+    .btn-ghost:hover { border-color: var(--fg); background: var(--bg-2); transform: translateY(-1px); }
 
-    /* ── Sections ────────────────────────────────────── */
-    section { padding: 6rem 4rem; border-bottom: 0.5px solid var(--border); }
+    /* ── Section helpers ─────────────────────────────── */
+    .section-wrap { max-width: 1100px; margin: 0 auto; padding: 5rem 4rem; }
     .section-label {
-      font-size: 0.72rem; font-weight: 700;
+      display: flex; align-items: center; gap: 0.65rem;
+      font-size: 0.7rem; font-weight: 700;
       letter-spacing: 0.22em; text-transform: uppercase;
       color: var(--accent); margin-bottom: 0.5rem;
     }
+    .section-label::before {
+      content: ''; display: block;
+      width: 22px; height: 2px; background: var(--accent); flex-shrink: 0;
+    }
+    .section-label.centered { justify-content: center; }
+    .section-label.centered::before { display: none; }
     .section-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      font-weight: 300; color: var(--fg); line-height: 1.05;
+      font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+      font-weight: 300; color: var(--fg); line-height: 1.1;
+      margin-bottom: 3.5rem;
     }
-    .section-header { margin-bottom: 4rem; }
 
-    /* ── About ───────────────────────────────────────── */
-    .about-grid {
-      display: grid; grid-template-columns: 1.1fr 0.9fr;
-      gap: 5rem; align-items: start;
+    /* ────────────────────────────────────────────────── */
+    /* HOME TAB                                           */
+    /* ────────────────────────────────────────────────── */
+    .hero {
+      padding: 5rem 4rem 4.5rem;
+      background: linear-gradient(140deg, #ffffff 30%, #f0f3fb 100%);
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
     }
+    .hero-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.1fr 0.9fr;
+      gap: 5rem; align-items: center;
+    }
+    .hero-bg-text {
+      position: absolute; right: -2rem; bottom: -4rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(14rem, 30vw, 30rem);
+      font-weight: 300; line-height: 1;
+      color: rgba(26,29,46,0.04);
+      pointer-events: none; user-select: none;
+    }
+    .hero-label {
+      display: flex; align-items: center; gap: 0.65rem;
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.25rem;
+    }
+    .hero-label::before {
+      content: ''; display: block; width: 28px; height: 2px; background: var(--accent);
+    }
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.8rem, 8vw, 7.5rem);
+      font-weight: 300; line-height: 0.92;
+      letter-spacing: -0.02em; color: var(--fg);
+      margin-bottom: 1.75rem;
+    }
+    .hero-name em { font-style: italic; color: var(--accent); }
+    .hero-desc { font-size: 1rem; color: var(--fg-2); line-height: 1.85; margin-bottom: 2.5rem; max-width: 460px; }
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; position: relative; z-index: 1; }
+    .stat-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 14px;
+      padding: 1.75rem 1.5rem; box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.22s, transform 0.22s;
+    }
+    .stat-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+    .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 3.2rem; font-weight: 300; color: var(--accent); line-height: 1; margin-bottom: 0.3rem; }
+    .stat-label { font-size: 0.75rem; font-weight: 600; color: var(--fg-2); letter-spacing: 0.06em; text-transform: uppercase; }
+
+    /* About band */
+    .about-band { background: var(--bg-2); border-bottom: 1px solid var(--border); }
+    .about-band .section-wrap { padding-bottom: 5.5rem; }
+    .about-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 5rem; align-items: start; }
     .about-text p { color: var(--fg-2); line-height: 1.9; margin-bottom: 1.2rem; }
     .about-text p:last-child { margin-bottom: 0; }
     .about-text strong { color: var(--fg); font-weight: 700; }
-    .about-details { display: flex; flex-direction: column; gap: 0; }
-    .detail-item {
-      padding: 1.5rem 0;
-      border-bottom: 0.5px solid var(--border);
-    }
-    .detail-item:first-child { padding-top: 0; }
+    .about-card { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .detail-item { padding: 1.1rem 1.5rem; border-bottom: 1px solid var(--border); }
     .detail-item:last-child { border-bottom: none; }
-    .detail-label {
-      font-size: 0.7rem; font-weight: 700;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 0.4rem;
-    }
-    .detail-value { color: var(--fg); font-size: 0.92rem; line-height: 1.65; }
-    .detail-value a { color: var(--fg-2); text-decoration: none; margin-right: 1rem; transition: color 0.2s; }
-    .detail-value a:hover { color: var(--fg); }
+    .detail-label { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; }
+    .detail-value { color: var(--fg); font-size: 0.9rem; line-height: 1.65; }
+    .detail-value a { color: var(--fg-2); text-decoration: none; margin-right: 0.85rem; font-size: 0.88rem; transition: color 0.2s; }
+    .detail-value a:hover { color: var(--accent); }
 
-    /* ── Research cards ──────────────────────────────── */
-    .research-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
-      border: 1px solid var(--border);
-    }
-    .research-card {
-      background: var(--bg-2); padding: 2.25rem;
-      transition: background 0.2s;
-    }
-    .research-card:hover { background: #13151e; }
-    .research-number {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.8rem; font-weight: 300;
-      color: var(--accent); opacity: 0.35;
-      line-height: 1; margin-bottom: 1.25rem;
-    }
-    .research-card h3 {
-      font-size: 0.95rem; font-weight: 700;
-      color: var(--fg); margin-bottom: 0.75rem; letter-spacing: 0.01em;
-    }
-    .research-card p { color: var(--fg-2); font-size: 0.88rem; line-height: 1.75; }
-
-    /* ── Publications ────────────────────────────────── */
+    /* ────────────────────────────────────────────────── */
+    /* PUBLICATIONS TAB                                   */
+    /* ────────────────────────────────────────────────── */
     .pub-list { display: flex; flex-direction: column; }
     .pub-item {
       display: grid; grid-template-columns: 3.5rem 1fr auto;
       gap: 2rem; align-items: start;
-      padding: 2rem 0; border-bottom: 0.5px solid var(--border);
+      padding: 1.75rem 1.25rem; border-radius: 10px;
+      transition: background 0.2s;
     }
-    .pub-item:last-child { border-bottom: none; }
-    .pub-year {
-      font-size: 0.8rem; font-weight: 700;
-      color: var(--accent); padding-top: 0.2rem;
-      letter-spacing: 0.04em;
-    }
-    .pub-details h3 {
-      font-size: 0.98rem; font-weight: 600;
-      color: var(--fg); line-height: 1.45; margin-bottom: 0.35rem;
-    }
+    .pub-item:hover { background: var(--bg-2); }
+    .pub-separator { height: 1px; background: var(--border); margin: 0 1.25rem; }
+    .pub-year { font-size: 0.8rem; font-weight: 700; color: var(--accent); padding-top: 0.2rem; letter-spacing: 0.04em; }
+    .pub-details h3 { font-size: 0.97rem; font-weight: 600; color: var(--fg); line-height: 1.45; margin-bottom: 0.3rem; }
     .pub-venue { font-size: 0.83rem; color: var(--fg-2); font-style: italic; }
-    .pub-authors { font-size: 0.8rem; color: var(--fg-2); margin-top: 0.2rem; opacity: 0.7; }
-    .pub-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: flex-end; padding-top: 0.2rem; }
-    .tag {
-      font-size: 0.67rem; font-weight: 700;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 0.22rem 0.55rem;
-      border: 0.5px solid var(--border-strong);
-      color: var(--fg-2);
-    }
-    .tag.conf { border-color: var(--accent); color: var(--accent); }
-    .tag.journal { border-color: #4a9eff; color: #4a9eff; }
+    .pub-authors { font-size: 0.8rem; color: var(--fg-3); margin-top: 0.15rem; }
+    .pub-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: flex-end; padding-top: 0.2rem; align-items: flex-start; }
+    .tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.22rem 0.65rem; border-radius: 5px; border: 1.5px solid var(--border-2); color: var(--fg-2); white-space: nowrap; }
+    .tag.conf     { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+    .tag.jrnl     { border-color: #2d6cdf; color: #2d6cdf; background: rgba(45,108,223,0.07); }
+    .tag.preprint { border-color: #7c5cbf; color: #7c5cbf; background: rgba(124,92,191,0.07); }
+    .tag.cite     { border-color: #2a9d5c; color: #2a9d5c; background: rgba(42,157,92,0.07); }
 
-    /* ── Timeline ────────────────────────────────────── */
-    .timeline { display: flex; flex-direction: column; }
-    .timeline-item {
-      display: grid; grid-template-columns: 220px 1fr;
-      gap: 3rem; padding: 2.5rem 0;
-      border-bottom: 0.5px solid var(--border);
+    /* ────────────────────────────────────────────────── */
+    /* SELECTED PROJECTS TAB                              */
+    /* ────────────────────────────────────────────────── */
+    .proj-list { display: flex; flex-direction: column; gap: 2.5rem; }
+
+    .proj-card {
+      display: grid; grid-template-columns: 260px 1fr;
+      gap: 2.5rem; align-items: start;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow-xs);
+      transition: box-shadow 0.25s, transform 0.25s;
     }
-    .timeline-item:last-child { border-bottom: none; }
-    .timeline-date {
+    .proj-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+
+    .proj-fig {
+      height: 100%;
+      min-height: 200px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden; flex-shrink: 0;
+    }
+    /* Each paper gets a distinct gradient */
+    .proj-fig-1 { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 60%, #93c5fd 100%); }
+    .proj-fig-2 { background: linear-gradient(135deg, #7c2d12 0%, #ea580c 60%, #fed7aa 100%); }
+    .proj-fig-3 { background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 60%, #c4b5fd 100%); }
+    .proj-fig-4 { background: linear-gradient(135deg, #064e3b 0%, #059669 60%, #a7f3d0 100%); }
+    .proj-fig-5 { background: linear-gradient(135deg, #713f12 0%, #ca8a04 60%, #fde68a 100%); }
+
+    .proj-fig-inner {
+      text-align: center; position: relative; z-index: 1; padding: 1.5rem;
+    }
+    .proj-fig-icon {
+      font-size: 3rem; line-height: 1; margin-bottom: 0.5rem;
+      opacity: 0.85; display: block;
+    }
+    .proj-fig-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.82rem; color: rgba(255,255,255,0.65);
+      font-style: italic; letter-spacing: 0.04em;
+    }
+    /* Subtle grid overlay on figure */
+    .proj-fig::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .proj-content { padding: 2rem 2rem 2rem 0; }
+    .proj-venue {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.6rem;
+    }
+    .proj-cite {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em;
+      color: #2a9d5c; background: rgba(42,157,92,0.1);
+      border: 1px solid rgba(42,157,92,0.25);
+      padding: 0.18rem 0.55rem; border-radius: 4px;
+    }
+    .proj-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem; font-weight: 400; color: var(--fg);
+      line-height: 1.25; margin-bottom: 0.5rem;
+    }
+    .proj-authors { font-size: 0.82rem; color: var(--fg-2); margin-bottom: 1rem; line-height: 1.6; }
+    .proj-authors strong { color: var(--fg); font-weight: 700; }
+    .proj-abstract { font-size: 0.88rem; color: var(--fg-2); line-height: 1.8; margin-bottom: 1.25rem; }
+    .proj-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .proj-link {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--accent);
+      text-decoration: none; border-bottom: 1.5px solid var(--accent);
+      padding-bottom: 1px;
+      transition: opacity 0.2s;
+    }
+    .proj-link:hover { opacity: 0.7; }
+    .proj-link.secondary { color: var(--fg-2); border-color: var(--border-2); }
+    .proj-link.secondary:hover { color: var(--fg); border-color: var(--fg); }
+
+    /* ────────────────────────────────────────────────── */
+    /* EXPERIENCE TAB                                     */
+    /* ────────────────────────────────────────────────── */
+    .exp-section { margin-bottom: 3.5rem; }
+    .exp-section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 400; color: var(--fg);
+      margin-bottom: 1.5rem; padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--accent); display: inline-block;
+    }
+    .timeline { display: flex; flex-direction: column; position: relative; }
+    .timeline::before {
+      content: ''; position: absolute;
+      left: calc(200px + 1.5rem); top: 1rem; bottom: 1rem; width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--border) 8%, var(--border) 92%, transparent);
+    }
+    .tl-item { display: grid; grid-template-columns: 200px 1fr; gap: 3rem; padding: 2rem 0; position: relative; }
+    .tl-item:not(:last-child) { border-bottom: 1px solid var(--border); }
+    .tl-dot { position: absolute; left: calc(200px + 1.5rem - 6px); top: 2.4rem; width: 13px; height: 13px; border-radius: 50%; background: var(--accent); border: 2.5px solid var(--bg); box-shadow: 0 0 0 2px var(--accent); z-index: 1; }
+    .tl-meta { text-align: right; padding-right: 1.75rem; padding-top: 0.1rem; }
+    .tl-date { font-size: 0.77rem; font-weight: 700; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 0.3rem; }
+    .tl-org { font-size: 0.82rem; color: var(--fg-2); line-height: 1.55; }
+    .tl-card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.4rem 1.6rem; box-shadow: var(--shadow-xs); transition: box-shadow 0.2s, transform 0.2s; }
+    .tl-card:hover { box-shadow: var(--shadow-sm); transform: translateY(-2px); }
+    .tl-card h3 { font-size: 0.97rem; font-weight: 700; color: var(--fg); margin-bottom: 0.35rem; }
+    .tl-card .tl-role { font-size: 0.79rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; letter-spacing: 0.04em; }
+    .tl-card p { font-size: 0.87rem; color: var(--fg-2); line-height: 1.8; }
+
+    /* ────────────────────────────────────────────────── */
+    /* ACTIVITIES TAB                                     */
+    /* ────────────────────────────────────────────────── */
+    .act-intro {
+      font-size: 1rem; color: var(--fg-2); line-height: 1.8;
+      max-width: 680px; margin-bottom: 3.5rem;
+      font-style: italic;
+    }
+    .act-year-block { margin-bottom: 3rem; }
+    .act-year-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 300; color: var(--accent);
+      line-height: 1; margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .act-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
+    .act-item {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1rem 1.25rem; border-radius: 10px;
+      transition: background 0.2s;
+    }
+    .act-item:hover { background: var(--bg-2); }
+    .act-bullet {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0; margin-top: 0.58rem;
+    }
+    .act-body { flex: 1; }
+    .act-role {
       font-size: 0.78rem; font-weight: 700;
-      letter-spacing: 0.1em; color: var(--accent); margin-bottom: 0.3rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--fg-3); margin-bottom: 0.25rem;
     }
-    .timeline-org { font-size: 0.83rem; color: var(--fg-2); line-height: 1.55; }
-    .timeline-content h3 {
-      font-size: 1rem; font-weight: 700;
-      color: var(--fg); margin-bottom: 0.5rem;
+    .act-event {
+      font-size: 0.95rem; color: var(--fg); line-height: 1.5;
     }
-    .timeline-content p { font-size: 0.88rem; color: var(--fg-2); line-height: 1.8; }
-
-    /* ── CV ──────────────────────────────────────────── */
-    #cv { text-align: center; }
-    .cv-inner { max-width: 560px; margin: 0 auto; }
-    .cv-inner .section-title { margin-bottom: 1.25rem; }
-    .cv-inner p { color: var(--fg-2); margin-bottom: 2.5rem; font-size: 0.98rem; line-height: 1.85; }
+    .act-event a {
+      color: var(--fg); text-decoration: none;
+      border-bottom: 1.5px solid var(--border-2);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .act-event a:hover { color: var(--accent); border-color: var(--accent); }
 
     /* ── Footer ──────────────────────────────────────── */
     footer {
-      padding: 2.5rem 4rem;
+      padding: 1.75rem 4rem;
       display: flex; justify-content: space-between; align-items: center;
+      background: var(--bg-3); border-top: 1px solid var(--border); flex-shrink: 0;
     }
-    .footer-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem; font-weight: 400; color: var(--fg-2);
-    }
+    .footer-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; color: var(--fg-2); }
     .footer-links { display: flex; gap: 2rem; list-style: none; }
-    .footer-links a {
-      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--fg-2);
-      text-decoration: none; transition: color 0.2s;
-    }
-    .footer-links a:hover { color: var(--fg); }
-    .footer-copy { font-size: 0.75rem; color: rgba(138,135,130,0.45); }
+    .footer-links a { font-size: 0.73rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-2); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy { font-size: 0.73rem; color: var(--fg-3); }
 
     /* ── Responsive ──────────────────────────────────── */
-    @media (max-width: 900px) {
-      nav { padding: 1.25rem 1.5rem; }
-      .nav-links { display: none; }
-      section, #hero { padding: 5rem 1.5rem 4rem; }
-      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
-      .research-grid { grid-template-columns: 1fr; }
-      .pub-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    @media (max-width: 960px) {
+      nav { padding: 0 1.5rem; }
+      .nav-tabs { display: none; }
+      .hamburger { display: flex; }
+      .section-wrap { padding: 3.5rem 1.5rem; }
+      .section-title { margin-bottom: 2.5rem; }
+      .hero { padding: 3.5rem 1.5rem; }
+      .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-stats { grid-template-columns: 1fr 1fr; }
+      .about-band .section-wrap { padding: 3.5rem 1.5rem 4rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .pub-item { grid-template-columns: 1fr; gap: 0.4rem; padding: 1.5rem 0.75rem; }
       .pub-tags { justify-content: flex-start; }
-      .timeline-item { grid-template-columns: 1fr; gap: 0.4rem; padding: 2rem 0; }
-      footer { flex-direction: column; gap: 1.5rem; text-align: center; padding: 2.5rem 1.5rem; }
+      .pub-separator { margin: 0 0.75rem; }
+      .proj-card { grid-template-columns: 1fr; }
+      .proj-fig { min-height: 180px; }
+      .proj-content { padding: 1.5rem; }
+      .timeline::before { display: none; }
+      .tl-dot { display: none; }
+      .tl-item { grid-template-columns: 1fr; gap: 0.75rem; }
+      .tl-meta { text-align: left; padding-right: 0; }
+      .act-item { padding: 0.9rem 0.5rem; }
+      footer { flex-direction: column; gap: 1.25rem; text-align: center; padding: 1.75rem 1.5rem; }
       .footer-links { flex-wrap: wrap; justify-content: center; }
     }
   </style>
@@ -257,215 +449,666 @@
 
 <!-- ─── Navigation ─────────────────────────────────── -->
 <nav>
-  <a href="#hero" class="nav-logo">RD</a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#research">Research</a></li>
-    <li><a href="#publications">Publications</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#cv">CV</a></li>
+  <a class="nav-name" href="#" onclick="showTab('home');return false;">Rudra Dhar</a>
+  <ul class="nav-tabs">
+    <li><a class="active" data-tab="home"        onclick="showTab('home');return false;"        href="#">Home</a></li>
+    <li><a               data-tab="publications" onclick="showTab('publications');return false;" href="#">Publications</a></li>
+    <li><a               data-tab="projects"     onclick="showTab('projects');return false;"     href="#">Selected Projects</a></li>
+    <li><a               data-tab="experience"   onclick="showTab('experience');return false;"   href="#">Experience</a></li>
+    <li><a               data-tab="activities"   onclick="showTab('activities');return false;"   href="#">Activities</a></li>
   </ul>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<!-- ─── Hero ───────────────────────────────────────── -->
-<section id="hero">
-  <div class="hero-bg-text">RD</div>
-  <div class="hero-label">Researcher &amp; [Your Field]</div>
-  <h1 class="hero-name">Rudra<br><em>Dhar</em></h1>
-  <p class="hero-description">
-    PhD Researcher at [University Name]. Working at the intersection of [Field A] and [Field B],
-    with a focus on [specific research area]. Passionate about [broader mission or goal].
-  </p>
-  <div class="hero-cta">
-    <a href="#research" class="btn-primary">View Research</a>
-    <a href="#publications" class="btn-ghost">Publications</a>
-  </div>
-</section>
+<!-- ─── Mobile Menu ─────────────────────────────────── -->
+<div class="mobile-menu" id="mobileMenu">
+  <a class="active" data-tab="home"        onclick="showTab('home');closeMobile();return false;"        href="#">Home</a>
+  <a               data-tab="publications" onclick="showTab('publications');closeMobile();return false;" href="#">Publications</a>
+  <a               data-tab="projects"     onclick="showTab('projects');closeMobile();return false;"     href="#">Selected Projects</a>
+  <a               data-tab="experience"   onclick="showTab('experience');closeMobile();return false;"   href="#">Experience</a>
+  <a               data-tab="activities"   onclick="showTab('activities');closeMobile();return false;"   href="#">Activities</a>
+</div>
 
-<!-- ─── About ──────────────────────────────────────── -->
-<section id="about">
-  <div class="section-header">
-    <div class="section-label">01 — About</div>
-    <h2 class="section-title">Who I am</h2>
-  </div>
-  <div class="about-grid">
-    <div class="about-text">
-      <p>
-        I am a <strong>PhD Researcher</strong> at [University / Institution], working on
-        [brief research summary]. My work focuses on [primary research question], with the
-        aim of [broader impact or goal].
-      </p>
-      <p>
-        Prior to my current position, I [brief background — previous roles or education].
-        My research has appeared in [journals / venues] and been presented at [conferences].
-      </p>
-      <p>
-        Outside research, I am interested in [interests / outreach / broader goals]. I
-        believe [something that speaks to your research philosophy or values].
-      </p>
-    </div>
-    <div class="about-details">
-      <div class="detail-item">
-        <div class="detail-label">Affiliation</div>
-        <div class="detail-value">[University / Lab Name]<br>[Department]</div>
-      </div>
-      <div class="detail-item">
-        <div class="detail-label">Research Areas</div>
-        <div class="detail-value">[Area 1] &middot; [Area 2] &middot; [Area 3]</div>
-      </div>
-      <div class="detail-item">
-        <div class="detail-label">Email</div>
-        <div class="detail-value">
-          <a href="mailto:your@email.com" style="color:var(--accent);">your@email.com</a>
+<div class="page">
+
+  <!-- ════════════════ HOME ════════════════ -->
+  <div id="tab-home" class="tab-content active">
+    <div class="tab-main">
+
+      <div class="hero">
+        <div class="hero-bg-text">RD</div>
+        <div class="hero-inner">
+          <div>
+            <h1 class="hero-name">Rudra<br><em>Dhar</em></h1>
+            <p class="hero-desc">
+              PhD researcher at IIIT Hyderabad developing Generative AI and Agentic AI
+              techniques for Software Architecture Knowledge Management.
+            </p>
+            <div class="hero-cta">
+              <a href="#" class="btn-primary" onclick="showTab('projects');return false;">Selected Projects</a>
+              <a href="#" class="btn-ghost"   onclick="showTab('publications');return false;">Publications</a>
+              <a href="assets/cv.pdf" class="btn-ghost" download>Download CV</a>
+            </div>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-card">
+              <div class="stat-number">160+</div>
+              <div class="stat-label">Citations</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">12</div>
+              <div class="stat-label">Publications</div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="detail-item">
-        <div class="detail-label">Links</div>
-        <div class="detail-value">
-          <a href="#">Google Scholar</a>
-          <a href="#">GitHub</a>
-          <a href="#">Twitter / X</a>
-          <a href="#">LinkedIn</a>
+
+      <div class="about-band">
+        <div class="section-wrap">
+          <div class="section-label">About</div>
+          <h2 class="section-title">Who I am</h2>
+          <div class="about-grid">
+            <div class="about-text">
+              <p>
+                I am a <strong>PhD researcher</strong> at the International Institute of Information
+                Technology, Hyderabad (IIIT-H), working on <strong>Generative AI for Architecture
+                Knowledge Management</strong>. I develop and apply Generative AI, LLM, and
+                Information Retrieval, and Agenti AI techniques to automate Software Architecture Knowledge Management —
+                spanning automated generation of Architectural Design Decisions, architecture
+                views, and agentic knowledge management systems.
+              </p>
+              <p>
+                My advisors are <strong>Dr. Karthik Vaidhyanathan</strong> and
+                <strong>Dr. Vasudeva Varma</strong>.
+              </p>
+              <p>
+                Before my PhD, I worked as an Analyst at <strong>HSBC</strong> and as a
+                Software Engineer at <strong>NRI Fintech</strong>. I hold a Masters in Computer
+                Science from Jadavpur University, where my thesis focused on NLP-based
+                fact-checking. My work has accumulated over 160 citations across IEEE
+                conferences, workshops, and preprints.
+              </p>
+            </div>
+            <div class="about-card">
+              <div class="detail-item">
+                <div class="detail-label">Affiliation</div>
+                <div class="detail-value">IIIT Hyderabad, India<br>Computer Science &amp; Engineering</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Research Areas</div>
+                <div class="detail-value">Generative AI &middot; Software Architecture &middot; Information Retrieval</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Advisors</div>
+                <div class="detail-value">Dr. Karthik Vaidhyanathan<br>Dr. Vasudeva Varma</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Email</div>
+                <div class="detail-value">
+                  <a href="mailto:rudra.dhar@research.iiit.ac.in" style="color:var(--accent);">rudra.dhar@research.iiit.ac.in</a>
+                </div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Links</div>
+                <div class="detail-value">
+                  <a href="https://scholar.google.com/citations?user=J5kfff0AAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
+                  <a href="https://www.linkedin.com/in/rudra-dhar-6a108a140/" target="_blank" rel="noopener">LinkedIn</a>
+                  <a href="https://dblp.org/pid/245/4411.html" target="_blank" rel="noopener">DBLP</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- #tab-home -->
+
+  <!-- ════════════════ PUBLICATIONS ════════════════ -->
+  <div id="tab-publications" class="tab-content">
+    <div class="tab-main">
+      <div class="section-wrap">
+        <h2 class="section-title">Publications</h2>
+        <div class="pub-list">
+
+          <div class="pub-item">
+            <div class="pub-year">2026</div>
+            <div class="pub-details">
+              <h3>AgenticAKM: Enroute to Agentic Architecture Knowledge Management</h3>
+              <div class="pub-venue">arXiv preprint, 2026</div>
+              <div class="pub-authors">R. Dhar, K. Vaidhyanathan, V. Varma</div>
+            </div>
+            <div class="pub-tags"><span class="tag preprint">Preprint</span></div>
+          </div>
+          <div class="pub-separator"></div>
+
+          <div class="pub-item">
+            <div class="pub-year">2026</div>
+            <div class="pub-details">
+              <h3>LLM-based Automated Architecture View Generation: Where Are We Now?</h3>
+              <div class="pub-venue">arXiv preprint, 2026</div>
+              <div class="pub-authors">S. Miryala, R. Dhar, K. Vaidhyanathan</div>
+            </div>
+            <div class="pub-tags"><span class="tag preprint">Preprint</span></div>
+          </div>
+          <div class="pub-separator"></div>
+
+          <div class="pub-item">
+            <div class="pub-year">2026</div>
+            <div class="pub-details">
+              <h3>Context Matters: Evaluating Context Strategies for Automated ADR Generation Using LLMs</h3>
+              <div class="pub-venue">arXiv preprint, 2026</div>
+              <div class="pub-authors">A. Gupta, R. Dhar, D. Feitosa, K. Vaidhyanathan</div>
+            </div>
+            <div class="pub-tags"><span class="tag preprint">Preprint</span></div>
+          </div>
+          <div class="pub-separator"></div>
+
+          <div class="pub-item">
+            <div class="pub-year">2025</div>
+            <div class="pub-details">
+              <h3>Engineering LLM Powered Multi-Agent Framework for Autonomous CloudOps</h3>
+              <div class="pub-venue">2025 IEEE/ACM 4th International Conference on AI Engineering–Software Engineering for AI (CAIN/AIRE)</div>
+              <div class="pub-authors">K. Parthasarathy, K. Vaidhyanathan, R. Dhar, et al.</div>
+            </div>
+            <div class="pub-tags"><span class="tag conf">Conference</span></div>
+          </div>
+          <div class="pub-separator"></div>
+
+          <div class="pub-item">
+            <div class="pub-year">2025</div>
+            <div class="pub-details">
+              <h3>DRAFT-ing Architectural Design Decisions using LLMs</h3>
+              <div class="pub-venue">arXiv preprint, 2025</div>
+              <div class="pub-authors">R. Dhar, A. Kakran, A. Karan, K. Vaidhyanathan, V. Varma</div>
+            </div>
+            <div class="pub-tags"><span class="tag preprint">Preprint</span></div>
+          </div>
+          <div class="pub-separator"></div>
+
+          <div class="pub-item">
+            <div class="pub-year">2025</div>
+            <div class="pub-details">
+              <h3>Generating Energy-Efficient Code via Large-Language Models – Where are we now?</h3>
+              <div class="pub-venue">arXiv preprint, 2025</div>
+              <div class="pub-authors">R. Apsan, V. Stoico, M. Albonico, R. Dhar, K. Vaidhyanathan, I. Malavolta</div>
+            </div>
+            <div class="pub-tags"><span class="tag preprint">Preprint</span></div>
+          </div>
+          <div class="pub-separator"></div>
+
+          <div class="pub-item">
+            <div class="pub-year">2024</div>
+            <div class="pub-details">
+              <h3>Can LLMs Generate Architectural Design Decisions? — An Exploratory Empirical Study</h3>
+              <div class="pub-venue">2024 IEEE 21st International Conference on Software Architecture (ICSA) · pp. 79–89</div>
+              <div class="pub-authors">R. Dhar, K. Vaidhyanathan, V. Varma</div>
+            </div>
+            <div class="pub-tags"><span class="tag conf">ICSA 2024</span></div>
+          </div>
+          <div class="pub-separator"></div>
+
+          <div class="pub-item">
+            <div class="pub-year">2024</div>
+            <div class="pub-details">
+              <h3>Leveraging Generative AI for Architecture Knowledge Management</h3>
+              <div class="pub-venue">2024 IEEE 21st International Conference on Software Architecture Companion (ICSA-C) · pp. 163–166</div>
+              <div class="pub-authors">R. Dhar, K. Vaidhyanathan, V. Varma</div>
+            </div>
+            <div class="pub-tags"><span class="tag conf">ICSA-C 2024</span></div>
+          </div>
+          <div class="pub-separator"></div>
+
+          <div class="pub-item">
+            <div class="pub-year">2024</div>
+            <div class="pub-details">
+              <h3>Multilingual Bias Detection and Mitigation for Indian Languages</h3>
+              <div class="pub-venue">7th Workshop on Indian Language Data: Resources and Evaluation (WILDRE) · Torino, Italia</div>
+              <div class="pub-authors">A. Maity, A. Sharma, R. Dhar, T. Abhishek, M. Gupta, V. Varma</div>
+            </div>
+            <div class="pub-tags"><span class="tag">Workshop</span></div>
+          </div>
+          <div class="pub-separator"></div>
+
+          <div class="pub-item">
+            <div class="pub-year">2022</div>
+            <div class="pub-details">
+              <h3>A Multilingual Dataset for Identification of Factual Claims in Indian Twitter</h3>
+              <div class="pub-venue">Forum for Information Retrieval Evaluation (FIRE), 2022</div>
+              <div class="pub-authors">S. Dutta, R. Dhar, P. Guha, A. Murmu, D. Das</div>
+            </div>
+            <div class="pub-tags"><span class="tag">Workshop</span></div>
+          </div>
+          <div class="pub-separator"></div>
+
+          <div class="pub-item">
+            <div class="pub-year">2022</div>
+            <div class="pub-details">
+              <h3>JU_NLP at HinglishEval: Quality Evaluation of Low-Resource Code-Mixed Hinglish Text</h3>
+              <div class="pub-venue">15th International Conference on Natural Language Processing (ICON), 2022</div>
+              <div class="pub-authors">P. Guha, R. Dhar, D. Das</div>
+            </div>
+            <div class="pub-tags"><span class="tag conf">Conference</span></div>
+          </div>
+          <div class="pub-separator"></div>
+
+          <div class="pub-item">
+            <div class="pub-year">2019</div>
+            <div class="pub-details">
+              <h3>A Hybrid Model to Rank Sentences for Check-worthiness</h3>
+              <div class="pub-venue">Working Notes of CLEF 2019 · Lugano, Switzerland</div>
+              <div class="pub-authors">R. Dhar, S. Dutta, D. Das</div>
+            </div>
+            <div class="pub-tags"><span class="tag">Workshop</span></div>
+          </div>
+
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </div><!-- #tab-publications -->
 
-<!-- ─── Research ────────────────────────────────────── -->
-<section id="research">
-  <div class="section-header">
-    <div class="section-label">02 — Research</div>
-    <h2 class="section-title">What I work on</h2>
-  </div>
-  <div class="research-grid">
-    <div class="research-card">
-      <div class="research-number">01</div>
-      <h3>[Research Area / Project Title One]</h3>
-      <p>Brief description of this research thrust — what question it addresses, what methods or tools are involved, and why the problem matters.</p>
-    </div>
-    <div class="research-card">
-      <div class="research-number">02</div>
-      <h3>[Research Area / Project Title Two]</h3>
-      <p>Brief description of this research thrust — what question it addresses, what methods or tools are involved, and why the problem matters.</p>
-    </div>
-    <div class="research-card">
-      <div class="research-number">03</div>
-      <h3>[Research Area / Project Title Three]</h3>
-      <p>Brief description of this research thrust — what question it addresses, what methods or tools are involved, and why the problem matters.</p>
-    </div>
-  </div>
-</section>
+  <!-- ════════════════ SELECTED PROJECTS ════════════════ -->
+  <div id="tab-projects" class="tab-content">
+    <div class="tab-main">
+      <div class="section-wrap">
+        <h2 class="section-title">Selected Projects</h2>
+        <div class="proj-list">
 
-<!-- ─── Publications ────────────────────────────────── -->
-<section id="publications">
-  <div class="section-header">
-    <div class="section-label">03 — Publications</div>
-    <h2 class="section-title">Selected work</h2>
-  </div>
-  <div class="pub-list">
+          <!-- Paper 1 -->
+          <div class="proj-card">
+            <div class="proj-fig proj-fig-1">
+              <div class="proj-fig-inner">
+                <span class="proj-fig-icon">🏛️</span>
+                <div class="proj-fig-label">Architecture Decision Records</div>
+              </div>
+            </div>
+            <div class="proj-content">
+              <div class="proj-venue">
+                IEEE ICSA 2024
+                <span class="proj-cite">50+ citations</span>
+              </div>
+              <h3 class="proj-title">Can LLMs Generate Architectural Design Decisions? — An Exploratory Empirical Study</h3>
+              <div class="proj-authors">
+                <strong>Rudra Dhar</strong>, Karthik Vaidhyanathan, Vasudeva Varma
+              </div>
+              <p class="proj-abstract">
+                Investigates whether Large Language Models can effectively generate Architecture Decision Records (ADRs)
+                — documents that capture critical design choices and their rationale in software projects. Testing GPT-4,
+                GPT-3.5, and Flan-T5 with zero-shot, few-shot, and fine-tuning approaches, the study finds that GPT-4
+                produces relevant and accurate design decisions in zero-shot settings, while more economical models match
+                performance with few-shot prompting. The work demonstrates promising but pre-human-level LLM capability
+                for automated ADR generation, calling for further research toward standardized adoption.
+              </p>
+              <div class="proj-links">
+                <a href="https://doi.org/10.1109/ICSA59870.2024.00016" target="_blank" rel="noopener" class="proj-link">Paper (IEEE) →</a>
+                <a href="https://arxiv.org/abs/2403.01709" target="_blank" rel="noopener" class="proj-link secondary">arXiv</a>
+              </div>
+            </div>
+          </div>
 
-    <div class="pub-item">
-      <div class="pub-year">2024</div>
-      <div class="pub-details">
-        <h3>[Paper Title: A Novel Approach to Something Important]</h3>
-        <div class="pub-venue">Proceedings of [Conference Name] (CONF'24)</div>
-        <div class="pub-authors">Rudra Dhar, [Co-author A], [Co-author B]</div>
+          <!-- Paper 2 -->
+          <div class="proj-card">
+            <div class="proj-fig proj-fig-2">
+              <div class="proj-fig-inner">
+                <span class="proj-fig-icon">🧠</span>
+                <div class="proj-fig-label">Architecture Knowledge Management</div>
+              </div>
+            </div>
+            <div class="proj-content">
+              <div class="proj-venue">
+                IEEE ICSA-C 2024
+              </div>
+              <h3 class="proj-title">Leveraging Generative AI for Architecture Knowledge Management</h3>
+              <div class="proj-authors">
+                <strong>Rudra Dhar</strong>, Karthik Vaidhyanathan, Vasudeva Varma
+              </div>
+              <p class="proj-abstract">
+                Presents a framework for applying Generative AI to automate Software Architecture Knowledge
+                Management (AKM). The paper identifies key challenges in capturing, storing, and retrieving
+                architectural knowledge at scale, and proposes using LLMs to reduce the substantial manual
+                effort traditionally required in AKM workflows. The work outlines a research roadmap for
+                building intelligent architecture documentation tools that can assist software teams in
+                managing evolving design knowledge.
+              </p>
+              <div class="proj-links">
+                <a href="https://doi.org/10.1109/ICSA-C63560.2024.00034" target="_blank" rel="noopener" class="proj-link">Paper (IEEE) →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paper 3 -->
+          <div class="proj-card">
+            <div class="proj-fig proj-fig-3">
+              <div class="proj-fig-inner">
+                <span class="proj-fig-icon">☁️</span>
+                <div class="proj-fig-label">Multi-Agent CloudOps</div>
+              </div>
+            </div>
+            <div class="proj-content">
+              <div class="proj-venue">
+                IEEE/ACM CAIN 2025
+              </div>
+              <h3 class="proj-title">Engineering LLM Powered Multi-Agent Framework for Autonomous CloudOps</h3>
+              <div class="proj-authors">
+                K. Parthasarathy, K. Vaidhyanathan, <strong>Rudra Dhar</strong>, V. Krishnamachari, B. Muhammed, A. Kakran, S. Akshathala, S. Arun, S. Dubey, M. Veerubhotla, A. Karan
+              </div>
+              <p class="proj-abstract">
+                Introduces MOYA, an LLM-powered multi-agent framework for Autonomous CloudOps. Combining
+                Generative AI with human oversight, MOYA orchestrates diverse agents using Retrieval-Augmented
+                Generation to handle complex cloud infrastructure workflows spanning heterogeneous data sources
+                and processes. Evaluations across complex operational tasks demonstrate improved accuracy and
+                task completion compared to non-agentic baselines, validating the multi-agent approach for
+                real-world cloud operations.
+              </p>
+              <div class="proj-links">
+                <a href="https://arxiv.org/abs/2501.08243" target="_blank" rel="noopener" class="proj-link">arXiv →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paper 4 -->
+          <div class="proj-card">
+            <div class="proj-fig proj-fig-4">
+              <div class="proj-fig-inner">
+                <span class="proj-fig-icon">🔍</span>
+                <div class="proj-fig-label">Fact-Checking &amp; NLP</div>
+              </div>
+            </div>
+            <div class="proj-content">
+              <div class="proj-venue">
+                CLEF 2019 Working Notes
+              </div>
+              <h3 class="proj-title">A Hybrid Model to Rank Sentences for Check-worthiness</h3>
+              <div class="proj-authors">
+                <strong>Rudra Dhar</strong>, Subhabrata Dutta, Dipankar Das
+              </div>
+              <p class="proj-abstract">
+                Proposes a hybrid model combining traditional NLP feature engineering with neural approaches to
+                automatically identify and rank check-worthy claims in political debates. Evaluated on the CLEF
+                2019 CheckThat! shared task, the approach integrates linguistic, structural, and contextual
+                features to prioritize sentences most in need of fact-checking by journalists and automated
+                verification systems. This early work laid the foundation for the author's subsequent research
+                in claim identification for low-resource Indian languages.
+              </p>
+              <div class="proj-links">
+                <a href="https://ceur-ws.org/Vol-2380/" target="_blank" rel="noopener" class="proj-link">Proceedings →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Paper 5 -->
+          <div class="proj-card">
+            <div class="proj-fig proj-fig-5">
+              <div class="proj-fig-inner">
+                <span class="proj-fig-icon">⚡</span>
+                <div class="proj-fig-label">Green Software Engineering</div>
+              </div>
+            </div>
+            <div class="proj-content">
+              <div class="proj-venue">
+                arXiv 2025
+              </div>
+              <h3 class="proj-title">Generating Energy-Efficient Code via Large-Language Models – Where are we now?</h3>
+              <div class="proj-authors">
+                R. Apsan, V. Stoico, M. Albonico, <strong>Rudra Dhar</strong>, K. Vaidhyanathan, I. Malavolta
+              </div>
+              <p class="proj-abstract">
+                Evaluates the energy efficiency of Python code generated by six major LLMs across 363 solutions
+                to 9 coding problems, tested on three hardware platforms (server, PC, Raspberry Pi) totalling
+                approximately 881 hours of measurements. Human solutions are 16% more energy-efficient on servers
+                and 3% on Raspberry Pi, while LLMs outperform humans by 25% on standard PCs. Code from a green
+                software expert consistently achieves 17–30% better efficiency than all LLM outputs, highlighting
+                that despite impressive code generation capabilities, there remains a critical need for
+                energy-awareness in AI-generated code.
+              </p>
+              <div class="proj-links">
+                <a href="https://arxiv.org/abs/2509.10099" target="_blank" rel="noopener" class="proj-link">arXiv →</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
-      <div class="pub-tags"><span class="tag conf">Conference</span></div>
     </div>
+  </div><!-- #tab-projects -->
 
-    <div class="pub-item">
-      <div class="pub-year">2023</div>
-      <div class="pub-details">
-        <h3>[Paper Title: A Significant Contribution to the Field]</h3>
-        <div class="pub-venue">Journal of [Field], vol. XX, no. X</div>
-        <div class="pub-authors">Rudra Dhar, [Co-author A]</div>
+  <!-- ════════════════ EXPERIENCE ════════════════ -->
+  <div id="tab-experience" class="tab-content">
+    <div class="tab-main">
+      <div class="section-wrap">
+        <h2 class="section-title">Education &amp; Experience</h2>
+
+        <div class="exp-section">
+          <div class="exp-section-title">Education</div>
+          <div class="timeline">
+
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-meta">
+                <div class="tl-date">Jul 2022 — Present</div>
+                <div class="tl-org">IIIT Hyderabad<br>Hyderabad, India</div>
+              </div>
+              <div class="tl-card">
+                <h3>PhD in Computer Science &amp; Engineering</h3>
+                <div class="tl-role">Generative AI for Architecture Knowledge Management</div>
+                <p>Developing and applying Generative AI and Information Retrieval techniques for Software
+                  Architecture Knowledge Management. Advisors: Dr. Karthik Vaidhyanathan and Dr. Vasudeva Varma.</p>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-meta">
+                <div class="tl-date">Jul 2018 — Jun 2020</div>
+                <div class="tl-org">Jadavpur University<br>Kolkata, India</div>
+              </div>
+              <div class="tl-card">
+                <h3>Masters in Computer Science &amp; Engineering</h3>
+                <div class="tl-role">Research Domain: Natural Language Processing</div>
+                <p>Thesis: <em>Fact Checkable Claim Identification and Verification</em>.</p>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-meta">
+                <div class="tl-date">Jul 2013 — Jun 2017</div>
+                <div class="tl-org">Institute of Engineering &amp; Management<br>Kolkata, India</div>
+              </div>
+              <div class="tl-card">
+                <h3>B.Tech in Computer Science &amp; Engineering</h3>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="exp-section">
+          <div class="exp-section-title">Work Experience</div>
+          <div class="timeline">
+
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-meta">
+                <div class="tl-date">Oct 2023 — Present</div>
+                <div class="tl-org">MontyCloud<br>Remote</div>
+              </div>
+              <div class="tl-card">
+                <h3>Research Assistant <span style="font-weight:400;color:var(--fg-2)">(Part Time)</span></h3>
+                <div class="tl-role">Industry-Academia Collaboration</div>
+                <p>Working on introducing AI features to Autonomous CloudOps, including an LLM-powered
+                  multi-agent framework published at IEEE/ACM CAIN 2025.</p>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-meta">
+                <div class="tl-date">Aug 2020 — Oct 2021</div>
+                <div class="tl-org">HSBC<br>India</div>
+              </div>
+              <div class="tl-card">
+                <h3>Analyst</h3>
+                <div class="tl-role">Data &amp; Analytics</div>
+                <p>Worked in the data team responsible for preparing and maintaining data pipelines
+                  for statistical and ML modeling.</p>
+              </div>
+            </div>
+
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-meta">
+                <div class="tl-date">Aug 2017 — Jul 2018</div>
+                <div class="tl-org">NRI Fintech<br>India</div>
+              </div>
+              <div class="tl-card">
+                <h3>Associate Software Engineer</h3>
+                <div class="tl-role">Full-Stack Development</div>
+                <p>Built full-stack web applications for share-market brokers using Java, Spring MVC,
+                  JSP, JavaScript, CSS, and relational databases.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
-      <div class="pub-tags"><span class="tag journal">Journal</span></div>
     </div>
+  </div><!-- #tab-experience -->
 
-    <div class="pub-item">
-      <div class="pub-year">2022</div>
-      <div class="pub-details">
-        <h3>[Paper Title: Early Work That Started the Thread]</h3>
-        <div class="pub-venue">Workshop on [Topic] at [Venue]</div>
-        <div class="pub-authors">Rudra Dhar, [Advisor / Supervisor]</div>
+  <!-- ════════════════ ACTIVITIES ════════════════ -->
+  <div id="tab-activities" class="tab-content">
+    <div class="tab-main">
+      <div class="section-wrap">
+        <div class="section-label">Activities</div>
+        <h2 class="section-title">Teaching, Visits &amp; Talks</h2>
+        <p class="act-intro">
+          "Science is a collaborative effort — Teaching, outreach, and community engagement
+          alongside research."
+        </p>
+
+        <div class="act-year-block">
+          <div class="act-year-heading">2026</div>
+          <ul class="act-list">
+            <li class="act-item">
+              <div class="act-bullet"></div>
+              <div class="act-body">
+                <div class="act-role">Teaching Assistant</div>
+                <div class="act-event">
+                  <a href="https://dfl.iiit.ac.in/programs/cert/aai" target="_blank" rel="noopener">
+                    Agentic AI Certificate Course
+                  </a>, IIIT Hyderabad
+                </div>
+              </div>
+            </li>
+            <li class="act-item">
+              <div class="act-bullet"></div>
+              <div class="act-body">
+                <div class="act-role">Guest Lecturer</div>
+                <div class="act-event">
+                  <a href="https://karthikv1392.github.io/cs6401_se/" target="_blank" rel="noopener">
+                    Software Engineering Course (CS6401)
+                  </a>, IIIT Hyderabad
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="act-year-block">
+          <div class="act-year-heading">2025</div>
+          <ul class="act-list">
+            <li class="act-item">
+              <div class="act-bullet"></div>
+              <div class="act-body">
+                <div class="act-role">Visiting Researcher</div>
+                <div class="act-event">
+                  <a href="https://www.lorentzcenter.nl/international-software-architecture-phd-school-25-isaps.html" target="_blank" rel="noopener">
+                    International Software Architecture PhD School (ISAPS)
+                  </a>, Lorentz Center
+                </div>
+              </div>
+            </li>
+            <li class="act-item">
+              <div class="act-bullet"></div>
+              <div class="act-body">
+                <div class="act-role">Teaching Assistant &amp; Guest Lecturer</div>
+                <div class="act-event">
+                  <a href="https://karthikv1392.github.io/cs6401_se/" target="_blank" rel="noopener">
+                    Software Engineering Course (CS6401)
+                  </a>, IIIT Hyderabad
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="act-year-block">
+          <div class="act-year-heading">2024</div>
+          <ul class="act-list">
+            <li class="act-item">
+              <div class="act-bullet"></div>
+              <div class="act-body">
+                <div class="act-role">Paper Presenter</div>
+                <div class="act-event">
+                  <a href="https://conf.researchr.org/home/icsa-2024" target="_blank" rel="noopener">
+                    IEEE 21st International Conference on Software Architecture (ICSA 2024)
+                  </a>, Hyderabad, India — presented "Can LLMs Generate Architectural Design Decisions?"
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
       </div>
-      <div class="pub-tags"><span class="tag">Workshop</span></div>
     </div>
+  </div><!-- #tab-activities -->
 
-  </div>
-</section>
-
-<!-- ─── Education & Experience ───────────────────────── -->
-<section id="experience">
-  <div class="section-header">
-    <div class="section-label">04 — Background</div>
-    <h2 class="section-title">Education &amp; Experience</h2>
-  </div>
-  <div class="timeline">
-
-    <div class="timeline-item">
-      <div>
-        <div class="timeline-date">2022 — Present</div>
-        <div class="timeline-org">[University Name]<br>[City, Country]</div>
-      </div>
-      <div class="timeline-content">
-        <h3>PhD in [Field]</h3>
-        <p>Research focus: [topic]. Advisor: Prof. [Name]. [One sentence on your thesis or key contribution so far.]</p>
-      </div>
-    </div>
-
-    <div class="timeline-item">
-      <div>
-        <div class="timeline-date">2020 — 2022</div>
-        <div class="timeline-org">[Company / Lab Name]<br>[City, Country]</div>
-      </div>
-      <div class="timeline-content">
-        <h3>[Job Title]</h3>
-        <p>[What you worked on, key projects, technologies, or outcomes. Keep it punchy — 1–2 sentences.]</p>
-      </div>
-    </div>
-
-    <div class="timeline-item">
-      <div>
-        <div class="timeline-date">2016 — 2020</div>
-        <div class="timeline-org">[University Name]<br>[City, Country]</div>
-      </div>
-      <div class="timeline-content">
-        <h3>BSc / MSc in [Field]</h3>
-        <p>Graduated [with first-class honours / distinction / GPA X.X]. Thesis: "[Title]". Supervised by [Advisor].</p>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ─── CV ──────────────────────────────────────────── -->
-<section id="cv">
-  <div class="cv-inner">
-    <div class="section-label">05 — Curriculum Vitae</div>
-    <h2 class="section-title">Download my CV</h2>
-    <p>
-      A full version of my CV — including publications, conference talks, awards,
-      teaching experience, and service — is available as a PDF.
-    </p>
-    <a href="assets/cv.pdf" class="btn-primary" download>Download CV (PDF)</a>
-  </div>
-</section>
+</div><!-- .page -->
 
 <!-- ─── Footer ──────────────────────────────────────── -->
 <footer>
   <div class="footer-name">Rudra Dhar</div>
   <ul class="footer-links">
-    <li><a href="mailto:your@email.com">Email</a></li>
-    <li><a href="#">Scholar</a></li>
-    <li><a href="#">GitHub</a></li>
-    <li><a href="#">Twitter</a></li>
+    <li><a href="mailto:rudra.dhar@research.iiit.ac.in">Email</a></li>
+    <li><a href="https://scholar.google.com/citations?user=J5kfff0AAAAJ&hl=en" target="_blank" rel="noopener">Scholar</a></li>
+    <li><a href="https://www.linkedin.com/in/rudra-dhar-6a108a140/" target="_blank" rel="noopener">LinkedIn</a></li>
+    <li><a href="https://dblp.org/pid/245/4411.html" target="_blank" rel="noopener">DBLP</a></li>
   </ul>
   <div class="footer-copy">&copy; 2025 Rudra Dhar</div>
 </footer>
+
+<script>
+  const TABS = ['home','publications','projects','experience','activities'];
+
+  function showTab(name) {
+    if (!TABS.includes(name)) name = 'home';
+    TABS.forEach(t => {
+      document.getElementById('tab-' + t).classList.toggle('active', t === name);
+    });
+    document.querySelectorAll('.nav-tabs a, .mobile-menu a').forEach(a => {
+      a.classList.toggle('active', a.dataset.tab === name);
+    });
+    history.replaceState(null, '', name === 'home' ? location.pathname : '#' + name);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  function closeMobile() {
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('open');
+  }
+  hamburger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open');
+  });
+
+  const hash = location.hash.replace('#', '');
+  if (hash && TABS.includes(hash)) showTab(hash);
+</script>
 
 </body>
 </html>
