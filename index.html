@@ -173,9 +173,11 @@
     }
     .hero-inner {
       max-width: 1100px; margin: 0 auto;
-      display: grid; grid-template-columns: 1.1fr 0.9fr;
+      display: grid; grid-template-columns: 400px 1fr;
       gap: 5rem; align-items: center;
     }
+    .hero-photo-col { display: flex; align-items: center; justify-content: center; }
+    .hero-text-col  { display: flex; flex-direction: column; justify-content: center; }
     .hero-bg-text {
       position: absolute; right: -2rem; bottom: -4rem;
       font-family: 'Cormorant Garamond', serif;
@@ -204,15 +206,15 @@
     .hero-desc { font-size: 1rem; color: var(--fg-2); line-height: 1.85; margin-bottom: 2.5rem; max-width: 460px; }
     .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
 
-    .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; position: relative; z-index: 1; }
+    .hero-stats { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2rem; }
     .stat-card {
-      background: var(--bg); border: 1px solid var(--border); border-radius: 14px;
-      padding: 1.75rem 1.5rem; box-shadow: var(--shadow-sm);
-      transition: box-shadow 0.22s, transform 0.22s;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.85rem 1.1rem; box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.22s, transform 0.22s; flex: 1; min-width: 80px;
     }
     .stat-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
-    .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 3.2rem; font-weight: 300; color: var(--accent); line-height: 1; margin-bottom: 0.3rem; }
-    .stat-label { font-size: 0.75rem; font-weight: 600; color: var(--fg-2); letter-spacing: 0.06em; text-transform: uppercase; }
+    .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--accent); line-height: 1; margin-bottom: 0.15rem; }
+    .stat-label { font-size: 0.67rem; font-weight: 600; color: var(--fg-2); letter-spacing: 0.06em; text-transform: uppercase; }
 
     /* About band */
     .about-band { background: var(--bg-2); border-bottom: 1px solid var(--border); }
@@ -270,37 +272,12 @@
     .proj-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
 
     .proj-fig {
-      height: 100%;
       min-height: 200px;
       display: flex; align-items: center; justify-content: center;
-      position: relative; overflow: hidden; flex-shrink: 0;
+      background: #ffffff; padding: 1.25rem; flex-shrink: 0;
+      border-right: 1px solid var(--border);
     }
-    /* Each paper gets a distinct gradient */
-    .proj-fig-1 { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 60%, #93c5fd 100%); }
-    .proj-fig-2 { background: linear-gradient(135deg, #7c2d12 0%, #ea580c 60%, #fed7aa 100%); }
-    .proj-fig-3 { background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 60%, #c4b5fd 100%); }
-    .proj-fig-4 { background: linear-gradient(135deg, #064e3b 0%, #059669 60%, #a7f3d0 100%); }
-    .proj-fig-5 { background: linear-gradient(135deg, #713f12 0%, #ca8a04 60%, #fde68a 100%); }
-
-    .proj-fig-inner {
-      text-align: center; position: relative; z-index: 1; padding: 1.5rem;
-    }
-    .proj-fig-icon {
-      font-size: 3rem; line-height: 1; margin-bottom: 0.5rem;
-      opacity: 0.85; display: block;
-    }
-    .proj-fig-label {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.82rem; color: rgba(255,255,255,0.65);
-      font-style: italic; letter-spacing: 0.04em;
-    }
-    /* Subtle grid overlay on figure */
-    .proj-fig::before {
-      content: ''; position: absolute; inset: 0;
-      background-image: linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
-      background-size: 24px 24px;
-    }
+    .proj-fig-1, .proj-fig-2, .proj-fig-3, .proj-fig-4, .proj-fig-5 { background: #ffffff; }
 
     .proj-content { padding: 2rem 2rem 2rem 0; }
     .proj-venue {
@@ -413,9 +390,9 @@
     }
     .footer-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; color: var(--fg-2); }
     .footer-links { display: flex; gap: 2rem; list-style: none; }
-    .footer-links a { font-size: 0.73rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-2); text-decoration: none; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--accent); }
-    .footer-copy { font-size: 0.73rem; color: var(--fg-3); }
+    .footer-links a { font-size: 0.73rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; transition: color 0.2s, opacity 0.2s; }
+    .footer-links a:hover { opacity: 0.75; }
+    .footer-copy { font-size: 0.95rem; color: var(--fg-2); }
 
     /* ── Responsive ──────────────────────────────────── */
     @media (max-width: 960px) {
@@ -425,15 +402,17 @@
       .section-wrap { padding: 3.5rem 1.5rem; }
       .section-title { margin-bottom: 2.5rem; }
       .hero { padding: 3.5rem 1.5rem; }
-      .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
-      .hero-stats { grid-template-columns: 1fr 1fr; }
+      .hero-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-photo { width: 200px; height: 200px; }
+      .hero-photo-col { margin-bottom: 0.5rem; }
+      .hero-stats { flex-wrap: wrap; }
       .about-band .section-wrap { padding: 3.5rem 1.5rem 4rem; }
       .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
       .pub-item { grid-template-columns: 1fr; gap: 0.4rem; padding: 1.5rem 0.75rem; }
       .pub-tags { justify-content: flex-start; }
       .pub-separator { margin: 0 0.75rem; }
       .proj-card { grid-template-columns: 1fr; }
-      .proj-fig { min-height: 180px; }
+      .proj-fig { min-height: 180px; border-right: none; border-bottom: 1px solid var(--border); }
       .proj-content { padding: 1.5rem; }
       .timeline::before { display: none; }
       .tl-dot { display: none; }
@@ -442,6 +421,31 @@
       .act-item { padding: 0.9rem 0.5rem; }
       footer { flex-direction: column; gap: 1.25rem; text-align: center; padding: 1.75rem 1.5rem; }
       .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+
+    /* ── Profile Photo ───────────────────────────────── */
+    .hero-photo {
+      width: 360px; height: 360px; border-radius: 50%;
+      object-fit: cover; object-position: top center;
+      border: 4px solid var(--accent);
+      box-shadow: 0 10px 52px rgba(232,93,58,0.28);
+      display: block;
+    }
+
+    /* ── Research Tags ───────────────────────────────── */
+    .research-tags { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.3rem; }
+    .research-tag {
+      display: inline-block; font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.05em; color: var(--accent);
+      background: var(--accent-bg); border: 1.5px solid rgba(232,93,58,0.3);
+      border-radius: 20px; padding: 0.28rem 0.8rem;
+      transition: background 0.2s, border-color 0.2s; white-space: nowrap;
+    }
+    .research-tag:hover { background: rgba(232,93,58,0.14); border-color: var(--accent); }
+
+    /* ── Project figure real image ───────────────────── */
+    .proj-fig-img {
+      display: block; object-fit: contain; max-width: auto; height: auto;
     }
   </style>
 </head>
@@ -480,26 +484,36 @@
       <div class="hero">
         <div class="hero-bg-text">RD</div>
         <div class="hero-inner">
-          <div>
+          <div class="hero-photo-col">
+            <img src="assets/Rudra2018.jpg" alt="Rudra Dhar" class="hero-photo">
+          </div>
+          <div class="hero-text-col">
+            <div class="hero-label">PhD Researcher · IIIT Hyderabad</div>
             <h1 class="hero-name">Rudra<br><em>Dhar</em></h1>
             <p class="hero-desc">
               PhD researcher at IIIT Hyderabad developing Generative AI and Agentic AI
               techniques for Software Architecture Knowledge Management.
             </p>
             <div class="hero-cta">
-              <a href="#" class="btn-primary" onclick="showTab('projects');return false;">Selected Projects</a>
-              <a href="#" class="btn-ghost"   onclick="showTab('publications');return false;">Publications</a>
               <a href="assets/cv.pdf" class="btn-ghost" download>Download CV</a>
             </div>
-          </div>
-          <div class="hero-stats">
-            <div class="stat-card">
-              <div class="stat-number">160+</div>
-              <div class="stat-label">Citations</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">12</div>
-              <div class="stat-label">Publications</div>
+            <div class="hero-stats">
+              <div class="stat-card">
+                <div class="stat-number">150+</div>
+                <div class="stat-label">Citations</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Publications</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Yrs Research Experience</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">2</div>
+                <div class="stat-label">Yrs Industry Experience</div>
+              </div>
             </div>
           </div>
         </div>
@@ -538,7 +552,13 @@
               </div>
               <div class="detail-item">
                 <div class="detail-label">Research Areas</div>
-                <div class="detail-value">Generative AI &middot; Software Architecture &middot; Information Retrieval</div>
+                <div class="detail-value research-tags">
+                  <span class="research-tag">Generative AI</span>
+                  <span class="research-tag">Software Architecture</span>
+                  <span class="research-tag">Information Retrieval</span>
+                  <span class="research-tag">Agentic AI</span>
+                  <span class="research-tag">Software Engineering</span>
+                </div>
               </div>
               <div class="detail-item">
                 <div class="detail-label">Advisors</div>
@@ -550,14 +570,14 @@
                   <a href="mailto:rudra.dhar@research.iiit.ac.in" style="color:var(--accent);">rudra.dhar@research.iiit.ac.in</a>
                 </div>
               </div>
-              <div class="detail-item">
+              <!-- <div class="detail-item">
                 <div class="detail-label">Links</div>
                 <div class="detail-value">
                   <a href="https://scholar.google.com/citations?user=J5kfff0AAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
                   <a href="https://www.linkedin.com/in/rudra-dhar-6a108a140/" target="_blank" rel="noopener">LinkedIn</a>
                   <a href="https://dblp.org/pid/245/4411.html" target="_blank" rel="noopener">DBLP</a>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -719,10 +739,7 @@
           <!-- Paper 1 -->
           <div class="proj-card">
             <div class="proj-fig proj-fig-1">
-              <div class="proj-fig-inner">
-                <span class="proj-fig-icon">🏛️</span>
-                <div class="proj-fig-label">Architecture Decision Records</div>
-              </div>
+              <img src="assets/study_design_new.png" alt="Study Design" class="proj-fig-img" width="250" height="250">
             </div>
             <div class="proj-content">
               <div class="proj-venue">
@@ -750,11 +767,8 @@
 
           <!-- Paper 2 -->
           <div class="proj-card">
-            <div class="proj-fig proj-fig-2">
-              <div class="proj-fig-inner">
-                <span class="proj-fig-icon">🧠</span>
-                <div class="proj-fig-label">Architecture Knowledge Management</div>
-              </div>
+            <div class="proj-fig proj-fig-3">
+              <img src="assets/system.png" alt="Approach" class="proj-fig-img" width="250" height="250">
             </div>
             <div class="proj-content">
               <div class="proj-venue">
@@ -780,11 +794,8 @@
 
           <!-- Paper 3 -->
           <div class="proj-card">
-            <div class="proj-fig proj-fig-3">
-              <div class="proj-fig-inner">
-                <span class="proj-fig-icon">☁️</span>
-                <div class="proj-fig-label">Multi-Agent CloudOps</div>
-              </div>
+            <div class="proj-fig proj-fig-1">
+              <img src="assets/core_final_MC.png" alt="Study Design" class="proj-fig-img" width="250" height="250">
             </div>
             <div class="proj-content">
               <div class="proj-venue">
@@ -811,10 +822,7 @@
           <!-- Paper 4 -->
           <div class="proj-card">
             <div class="proj-fig proj-fig-4">
-              <div class="proj-fig-inner">
-                <span class="proj-fig-icon">🔍</span>
-                <div class="proj-fig-label">Fact-Checking &amp; NLP</div>
-              </div>
+              <img src="assets/Claim%20Detection%20Diagram.png" alt="Claim Detection Diagram" class="proj-fig-img" width="250" height="250">
             </div>
             <div class="proj-content">
               <div class="proj-venue">
@@ -840,11 +848,8 @@
 
           <!-- Paper 5 -->
           <div class="proj-card">
-            <div class="proj-fig proj-fig-5">
-              <div class="proj-fig-inner">
-                <span class="proj-fig-icon">⚡</span>
-                <div class="proj-fig-label">Green Software Engineering</div>
-              </div>
+            <div class="proj-fig proj-fig-1">
+              <img src="assets/study_design_ICSE.png" alt="Study Design" class="proj-fig-img" width="250" height="250">
             </div>
             <div class="proj-content">
               <div class="proj-venue">
@@ -1072,12 +1077,11 @@
 <footer>
   <div class="footer-name">Rudra Dhar</div>
   <ul class="footer-links">
-    <li><a href="mailto:rudra.dhar@research.iiit.ac.in">Email</a></li>
-    <li><a href="https://scholar.google.com/citations?user=J5kfff0AAAAJ&hl=en" target="_blank" rel="noopener">Scholar</a></li>
+    <li><a href="https://scholar.google.com/citations?user=J5kfff0AAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a></li>
     <li><a href="https://www.linkedin.com/in/rudra-dhar-6a108a140/" target="_blank" rel="noopener">LinkedIn</a></li>
     <li><a href="https://dblp.org/pid/245/4411.html" target="_blank" rel="noopener">DBLP</a></li>
   </ul>
-  <div class="footer-copy">&copy; 2025 Rudra Dhar</div>
+  <div class="footer-copy">rudra.dhar@research.iiit.ac.in</div>
 </footer>
 
 <script>
